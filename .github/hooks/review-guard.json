@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "hooks": {
+    "preToolUse": [
+      {
+        "type": "command",
+        "bash": "node scripts/guard.js",
+        "powershell": "$ErrorActionPreference = 'Stop'; $runtimeFile = Join-Path (Get-Location) '.tools/node-path.txt'; $guardRuntime = if (Test-Path -LiteralPath $runtimeFile -PathType Leaf) { [System.IO.File]::ReadAllText($runtimeFile).Trim() } else { (Get-Command node -CommandType Application -ErrorAction Stop).Source }; if (-not [System.IO.Path]::IsPathRooted($guardRuntime) -or -not (Test-Path -LiteralPath $guardRuntime -PathType Leaf)) { throw 'Invalid local Node.js runtime configuration.' }; [Console]::In.ReadToEnd() | & $guardRuntime './scripts/guard.js'; exit $LASTEXITCODE",
+        "timeoutSec": 10
+      }
+    ]
+  }
+}
